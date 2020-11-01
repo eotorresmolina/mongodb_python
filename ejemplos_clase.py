@@ -89,7 +89,7 @@ def find_persona(name):
     conn = TinyMongoClient()
     db = conn[db_name]
 
-    # Encontrar un documento por le campo name
+    # Encontrar un documento por el campo "name"
     person_data = db.persons.find_one({"name": name})
 
     # Cerrar la conexión con la base de datos
@@ -102,7 +102,7 @@ def count_by_country(country):
     conn = TinyMongoClient()
     db = conn[db_name]
 
-    # Contar cuantos docuemtnos poseen el campo de nacionalidad indicado
+    # Contar cuantos documentos poseen el campo de nacionalidad indicado
     count = db.persons.find({"nationality": country}).count()
 
     # Cerrar la conexión con la base de datos
