@@ -38,9 +38,14 @@ def clear( ):
 
 
 def fetch ( ):
+    response_json = {}
+
     url = 'https://jsonplaceholder.typicode.com/todos'
     response = requests.get(url)
-    return response.json()
+    if response.status_code == 200:
+        response_json = response.json( )
+
+    return response_json
 
 
 def fill_chunk (chunksize=10):
