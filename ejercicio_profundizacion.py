@@ -117,5 +117,5 @@ if __name__ == "__main__":
     # Títulos Completados.
     userId = 5
     cant_titles_completed = title_completed_count(userId)
-    print("La Cantidad de Títulos Completados por el UserId {} es: {}\n\n".format(userId, cant_titles_completed))
+    print("\n\nLa Cantidad de Títulos Completados por el UserId {} es: {}\n\n".format(userId, cant_titles_completed))
     
