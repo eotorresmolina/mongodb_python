@@ -20,6 +20,9 @@ import tinydb
 import requests
 
 import json
+import os
+
+from config import config
 
 
 class TinyMongoClient(tm.TinyMongoClient):
@@ -27,20 +30,28 @@ class TinyMongoClient(tm.TinyMongoClient):
     def _storage(self):
         return tinydb.storages.JSONStorage
 
-db_name = "course"
+
+script_path = os.path.dirname(os.path.realpath(__file__))
+
+config_path_name = os.path.join(script_path, 'config.ini')
+
+db = config('db', config_path_name)
+url = config('requests', config_path_name)['url']
+
+
+db_name = db['database']
+collection_name = db['collection']
 
 
 def clear( ):
     conn = TinyMongoClient()
     db = conn[db_name]
-    db.titles.remove({})
+    db.collection_name.remove({})
     conn.close()
 
 
 def fetch ( ):
     response_json = {}
-
-    url = 'https://jsonplaceholder.typicode.com/todos'
     response = requests.get(url)
     if response.status_code == 200:
         response_json = response.json( )
@@ -59,11 +70,11 @@ def fill_chunk (chunksize=10):
     for row in json_data:
         chunk.append(row)
         if len(chunk) == chunksize:
-            db.titles.insert_many(chunk)
+            db.collection_name.insert_many(chunk)
             chunk.clear()
 
     if chunk:
-        db.titles.insert_many(chunk)
+        db.collection_name.insert_many(chunk)
 
     conn.close( )
 
@@ -75,7 +86,7 @@ def fill ( ):
 
     conn = TinyMongoClient()
     db = conn[db_name]
-    db.titles.insert_many(json_data)
+    db.collection_name.insert_many(json_data)
     conn.close( )
 
 
@@ -83,7 +94,7 @@ def show( ):
     print('\n\nMostramos el Contenido de la Colección:\n')
     conn = TinyMongoClient()
     db = conn[db_name]
-    data = db.titles.find( )
+    data = db.collection_name.find( )
     
     json_data = list(data)
     json_string = json.dumps(json_data, indent=4)
@@ -96,7 +107,7 @@ def show( ):
 def title_completed_count (userId):
     conn = TinyMongoClient()
     db = conn[db_name]
-    count = db.titles.find({"userId": userId, "completed": True}).count()
+    count = db.collection_name.find({"userId": userId, "completed": True}).count()
     conn.close()
 
     return count
